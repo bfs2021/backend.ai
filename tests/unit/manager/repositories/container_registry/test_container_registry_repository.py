@@ -587,7 +587,7 @@ class TestContainerRegistryRepository:
             )
 
             assert len(associations) == 2
-            assert {str(a.group_id) for a in associations} == set(group_ids)
+            assert {str(a.project_id) for a in associations} == set(group_ids)
 
     @pytest.fixture
     async def sample_registry_with_images(
@@ -946,7 +946,7 @@ class TestContainerRegistryRepository:
             )
 
             assert len(associations) == 2
-            assert {a.group_id for a in associations} == set(
+            assert {a.project_id for a in associations} == set(
                 registry_and_groups_for_adding.group_ids
             )
 
@@ -1009,7 +1009,7 @@ class TestContainerRegistryRepository:
                 # Associate with registry
                 assoc = AssociationContainerRegistriesGroupsRow()
                 assoc.registry_id = registry.id
-                assoc.group_id = group.id
+                assoc.project_id = group.id
                 session.add(assoc)
 
             await session.commit()
@@ -1057,7 +1057,7 @@ class TestContainerRegistryRepository:
             )
 
             assert len(associations) == group_count - 1
-            assert {a.group_id for a in associations} == {
+            assert {a.project_id for a in associations} == {
                 registry_with_associated_groups.group_ids[1],
                 registry_with_associated_groups.group_ids[2],
             }
@@ -1131,7 +1131,7 @@ class TestContainerRegistryRepository:
             for gid in group_ids[:2]:
                 assoc = AssociationContainerRegistriesGroupsRow()
                 assoc.registry_id = registry.id
-                assoc.group_id = gid
+                assoc.project_id = gid
                 session.add(assoc)
 
             await session.commit()
@@ -1179,7 +1179,7 @@ class TestContainerRegistryRepository:
             )
 
             assert len(associations) == 3
-            assert {a.group_id for a in associations} == {
+            assert {a.project_id for a in associations} == {
                 group_ids[1],
                 group_ids[2],
                 group_ids[3],
@@ -1252,7 +1252,7 @@ class TestContainerRegistryRepository:
         async with db_with_cleanup.begin_readonly_session() as session:
             linked = (
                 await session.scalars(
-                    sa.select(AssociationContainerRegistriesGroupsRow.group_id).where(
+                    sa.select(AssociationContainerRegistriesGroupsRow.project_id).where(
                         AssociationContainerRegistriesGroupsRow.registry_id == registry_id
                     )
                 )
